@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Resumaiz — AI-powered resume rewriter that beats ATS systems. Get 3x more callbacks. Starting at $29.">
+<title>Resumaiz — AI Resume Rewriter</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#faf7f2;--warm:#f2ece0;--dark:#1a1410;--brown:#2d2018;--gold:#c9963a;--gold-light:#e8b85a;--gold-pale:#f5e4c0;--text:#2d2018;--muted:#8a7a6a;--border:#e0d4c0;--success:#2d6a4f;--danger:#9b2335;--white:#ffffff;--shadow:0 2px 20px rgba(0,0,0,0.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh}
+/* HEADER */
+header{background:var(--dark);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100}
+.logo{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold-light)}
+.logo span{color:var(--white)}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;border:1px solid rgba(201,150,58,0.4);padding:4px 10px;border-radius:2px}
+.header-pro-link{font-size:13px;color:var(--gold-light);text-decoration:none;font-weight:500;transition:color 0.2s}
+.header-pro-link:hover{color:var(--white)}
+/* HERO */
+.hero{background:var(--dark);padding:80px 40px 90px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:700px;height:350px;background:radial-gradient(ellipse,rgba(201,150,58,0.12) 0%,transparent 70%);pointer-events:none}
+.hero-kicker{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:24px;animation:fadeUp 0.5s ease both}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,8vw,80px);color:var(--white);line-height:1.05;margin-bottom:24px;animation:fadeUp 0.5s ease 0.1s both}
+.hero h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:17px;color:#9a8f80;max-width:520px;margin:0 auto 40px;line-height:1.7;font-weight:300;animation:fadeUp 0.5s ease 0.2s both}
+.hero-stats{display:flex;justify-content:center;gap:48px;animation:fadeUp 0.5s ease 0.3s both}
+.stat{text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold-light);display:block}
+.stat-label{font-size:12px;color:#6a5f55;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* LIVE COUNTER */
+.live-bar{background:#111;padding:12px 40px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6a6058;letter-spacing:2px;border-bottom:1px solid #1a1a1a}
+.live-bar span{color:var(--gold)}
+/* STEPS BAR */
+.steps-bar{background:var(--warm);border-bottom:1px solid var(--border);padding:20px 40px;display:flex;align-items:center;justify-content:center}
+.step{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:var(--muted);transition:color 0.3s}
+.step.active{color:var(--text)}
+.step.done{color:var(--success)}
+.step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;transition:all 0.3s;flex-shrink:0}
+.step.active .step-num{background:var(--gold);border-color:var(--gold);color:var(--white)}
+.step.done .step-num{background:var(--success);border-color:var(--success);color:var(--white)}
+.step-divider{width:50px;height:1px;background:var(--border);margin:0 4px}
+/* MAIN */
+.main{max-width:900px;margin:0 auto;padding:60px 24px 80px}
+.panel{display:none;animation:fadeUp 0.4s ease both}
+.panel.active{display:block}
+/* PROOF ROW */
+.proof-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px}
+.proof-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:18px;box-shadow:var(--shadow)}
+.proof-stars{color:var(--gold);font-size:13px;margin-bottom:8px}
+.proof-card p{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px;font-style:italic}
+.proof-name{font-size:12px;font-weight:600;color:var(--text)}
+.proof-role{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:32px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card h3{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:6px;color:var(--dark)}
+.card p.sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block}
+/* FORM */
+.field{margin-bottom:20px}
+label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
+textarea,input[type=text],select{width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;padding:13px 15px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;line-height:1.5}
+textarea:focus,input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,150,58,0.1)}
+textarea{resize:vertical}
+.char-count{font-size:11px;color:var(--muted);text-align:right;margin-top:4px;font-family:'JetBrains Mono',monospace}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:15px;padding:14px 28px;transition:all 0.18s;white-space:nowrap;text-decoration:none}
+.btn-primary{background:var(--gold);color:var(--white);width:100%;font-size:16px;padding:16px}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 4px 20px rgba(201,150,58,0.35)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted);font-size:13px;padding:10px 20px}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-success{background:var(--success);color:var(--white)}
+.btn-success:hover{background:#235c44;transform:translateY(-1px)}
+/* UPSELL GRID */
+.upsell-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.upsell-card{background:var(--white);border:2px solid var(--border);border-radius:8px;padding:22px;cursor:pointer;transition:all 0.2s;position:relative}
+.upsell-card:hover{border-color:var(--gold);box-shadow:0 4px 20px rgba(201,150,58,0.1)}
+.upsell-card.selected{border-color:var(--gold);background:#fffbf3}
+.upsell-card.selected::after{content:'✓';position:absolute;top:12px;right:14px;width:22px;height:22px;background:var(--gold);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.upsell-icon{font-size:28px;margin-bottom:10px}
+.upsell-card h4{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:4px}
+.upsell-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 12px}
+.upsell-price{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--gold)}
+.upsell-original{text-decoration:line-through;color:var(--muted);font-size:12px;margin-left:6px}
+/* ORDER SUMMARY */
+.order-summary{background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:20px}
+.order-summary h4{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:16px}
+.order-line{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid var(--border)}
+.order-line:last-child{border-bottom:none}
+.order-line.total{font-weight:600;font-size:16px;padding-top:12px;margin-top:4px}
+.order-line.total .price{color:var(--gold);font-family:'Playfair Display',serif;font-size:20px}
+/* LOADING */
+.spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-wrap{text-align:center;padding:60px 20px}
+.loading-wrap h3{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:8px}
+.loading-wrap p{font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:24px}
+.loading-steps{text-align:left;max-width:300px;margin:0 auto}
+.ls{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);padding:7px 0;transition:color 0.3s}
+.ls.done{color:var(--success)}
+.ls.active{color:var(--text)}
+.ls-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background 0.3s}
+.ls.done .ls-dot{background:var(--success)}
+.ls.active .ls-dot{background:var(--gold);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.timeout-msg{display:none;background:#fff5f5;border:1px solid #fcc;border-radius:6px;padding:16px 20px;color:var(--danger);font-size:14px;text-align:center;margin-top:20px}
+/* RESULTS */
+.result-header{background:linear-gradient(135deg,var(--dark),var(--brown));border-radius:8px;padding:32px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden}
+.result-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,150,58,0.2),transparent 60%)}
+.result-header h2{font-family:'Playfair Display',serif;font-size:28px;color:var(--white);margin-bottom:8px;position:relative}
+.result-header p{font-size:14px;color:#9a8f80;position:relative}
+.result-badges{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;position:relative}
+.badge-pill{background:rgba(201,150,58,0.15);border:1px solid rgba(201,150,58,0.3);color:var(--gold-light);font-size:12px;font-family:'JetBrains Mono',monospace;padding:5px 14px;border-radius:100px;letter-spacing:1px}
+.result-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:24px;overflow-x:auto}
+.tab{font-size:14px;font-weight:500;padding:12px 20px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.2s;white-space:nowrap;background:transparent;border-top:none;border-left:none;border-right:none;font-family:'Outfit',sans-serif}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none;animation:fadeUp 0.3s ease}
+.tab-content.active{display:block}
+.resume-output{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:32px;font-size:14px;line-height:1.8;color:var(--text);white-space:pre-wrap;font-family:'Outfit',sans-serif;min-height:300px;box-shadow:var(--shadow)}
+.improvements-list{list-style:none;padding:0}
+.imp-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.imp-item:last-child{border-bottom:none}
+.imp-icon{width:32px;height:32px;border-radius:50%;background:rgba(201,150,58,0.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px}
+.imp-text strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px}
+.imp-text span{font-size:13px;color:var(--muted);line-height:1.5}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.extra-result{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:28px;margin-bottom:16px;box-shadow:var(--shadow)}
+.extra-result h4{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+/* ERROR */
+.error-card{background:#fff5f5;border:1px solid #fcc;border-radius:8px;padding:16px 20px;color:var(--danger);font-size:14px;display:none;margin-bottom:16px}
+/* GUARANTEE */
+.guarantee{background:var(--warm);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:4px;padding:14px 18px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:12px;margin-top:16px}
+.guarantee-icon{font-size:22px;flex-shrink:0}
+/* PRO UPSELL BANNER */
+.pro-banner{background:linear-gradient(135deg,var(--dark) 0%,#2a1a08 100%);border:1px solid rgba(201,150,58,0.35);border-radius:8px;padding:28px 32px;margin-top:24px;display:none;align-items:center;gap:28px;position:relative;overflow:hidden;animation:fadeUp 0.5s ease both}
+.pro-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold))}
+.pro-banner-icon{font-size:40px;flex-shrink:0}
+.pro-banner-body{flex:1;min-width:0}
+.pro-banner-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.pro-banner-body h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--white);margin-bottom:8px;line-height:1.2}
+.pro-banner-body p{font-size:13px;color:#9a8f80;line-height:1.6;margin-bottom:14px}
+.pro-features{display:flex;flex-wrap:wrap;gap:8px}
+.pro-feat{background:rgba(201,150,58,0.1);border:1px solid rgba(201,150,58,0.2);color:var(--gold-light);font-size:11px;font-family:'JetBrains Mono',monospace;padding:4px 10px;border-radius:100px;letter-spacing:0.5px;white-space:nowrap}
+.pro-banner-cta{flex-shrink:0;text-align:center}
+.btn-pro{display:block;background:var(--gold);color:var(--dark);border:none;border-radius:6px;font-family:'Playfair Display',serif;font-size:15px;font-weight:700;padding:14px 28px;cursor:pointer;transition:all 0.18s;white-space:nowrap;margin-bottom:8px;width:100%}
+.btn-pro:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,150,58,0.35)}
+.pro-price{font-size:11px;color:#6a5f55;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-align:center}
+/* EMAIL CAPTURE MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:36px;max-width:460px;width:100%;animation:fadeUp 0.3s ease;position:relative;box-shadow:0 24px 60px rgba(0,0,0,0.15)}
+.modal h2{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:8px}
+.modal .sub{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.modal-close{position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all 0.2s}
+.modal-close:hover{background:var(--warm);color:var(--text)}
+.modal-input{width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;padding:14px 16px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:14px}
+.modal-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,150,58,0.1)}
+.modal-disclaimer{font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5}
+/* SHARE */
+.share-row{display:flex;gap:10px;align-items:center;padding:14px 18px;background:var(--warm);border-radius:8px;border:1px solid var(--border);margin-top:12px}
+.share-text{font-size:13px;color:var(--text);flex:1;line-height:1.4}
+.share-text strong{display:block;font-size:14px;margin-bottom:2px}
+/* LEGAL FOOTER */
+footer{background:var(--dark);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-logo{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold)}
+.footer-logo span{color:var(--white)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:#6a5f55;text-decoration:none;font-family:'JetBrains Mono',monospace;letter-spacing:1px;transition:color 0.2s}
+.footer-links a:hover{color:var(--gold)}
+/* RESPONSIVE */
+@media(max-width:640px){
+  header{padding:0 16px}
+  .hero{padding:40px 16px 60px}
+  .hero-stats{gap:20px}
+  .steps-bar{padding:14px 16px}
+  .step-divider{width:20px}
+  .step span{display:none}
+  .main{padding:24px 16px 60px}
+  .upsell-grid{grid-template-columns:1fr}
+  .action-row{grid-template-columns:1fr}
+  .proof-row{grid-template-columns:1fr}
+  .pro-banner{flex-direction:column;padding:24px 20px}
+  footer{padding:20px 16px;flex-direction:column;text-align:center}
+  .footer-links{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Resumaiz</div>
+  <div class="header-right">
+    <a href="resumaiz-pro.html" class="header-pro-link">Pro Dashboard →</a>
+    <div class="header-tag">AI-POWERED</div>
+  </div>
+</header>
+
+<div class="live-bar">
+  <span id="liveCount">2,847</span> resumes rewritten this month · Average score improvement: <span>+41 points</span>
+</div>
+
+<div class="hero">
+  <p class="hero-kicker">// land more interviews</p>
+  <h1>Your Resume,<br><em>Reimagined.</em></h1>
+  <p class="hero-sub">AI rewrites your resume to beat ATS systems, match the job description, and get you in front of real humans — in under 60 seconds.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">3x</span><span class="stat-label">More Callbacks</span></div>
+    <div class="stat"><span class="stat-num">94%</span><span class="stat-label">ATS Pass Rate</span></div>
+    <div class="stat"><span class="stat-num">60s</span><span class="stat-label">Delivery Time</span></div>
+  </div>
+</div>
+
+<div class="steps-bar">
+  <div class="step active" id="si1"><div class="step-num">1</div><span>Your Resume</span></div>
+  <div class="step-divider"></div>
+  <div class="step" id="si2"><div class="step-num">2</div><span>Target Job</span></div>
+  <div class="step-divider"></div>
+  <div class="step" id="si3"><div class="step-num">3</div><span>Upgrade</span></div>
+  <div class="step-divider"></div>
+  <div class="step" id="si4"><div class="step-num">4</div><span>Results</span></div>
+</div>
+
+<div class="main">
+  <div class="error-card" id="errorCard"></div>
+
+  <!-- STEP 1 -->
+  <div class="panel active" id="p1">
+    <div class="proof-row">
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <p>"Got 4 interview requests within a week. My old resume got zero responses for 2 months."</p>
+        <div class="proof-name">Marcus T.</div><div class="proof-role">Software Engineer · Chicago</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <p>"The ATS optimization is worth every penny. Landed at a Fortune 500 after being ghosted for months."</p>
+        <div class="proof-name">Priya S.</div><div class="proof-role">Marketing Manager · Atlanta</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <p>"Best $29 I ever spent. Resumaiz turned my generic resume into something that actually sells me."</p>
+        <div class="proof-name">Jordan K.</div><div class="proof-role">Project Manager · Dallas</div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="section-label">Step 1 of 4</span>
+      <h3>Paste Your Current Resume</h3>
+      <p class="sub">Copy and paste your entire resume below. The more detail you include, the better your rewrite.</p>
+      <div class="field">
+        <label for="resumeInput">Your Resume Content</label>
+        <textarea id="resumeInput" rows="14" placeholder="Paste your full resume here — work experience, education, skills, certifications, everything.&#10;&#10;Example:&#10;Jane Smith | jane@email.com | Chicago, IL&#10;&#10;EXPERIENCE&#10;Marketing Coordinator — Acme Corp (2022–2024)&#10;• Managed social media accounts across 3 platforms&#10;• Wrote monthly blog posts and email newsletters&#10;• Assisted with campaign planning and reporting&#10;&#10;EDUCATION&#10;B.S. Marketing — University of Illinois, 2022&#10;&#10;SKILLS&#10;Excel, HubSpot, Canva, Google Analytics" oninput="updateCount(this,'rc')"></textarea>
+        <div class="char-count" id="rc">0 characters — aim for 300+ for best results</div>
+      </div>
+      <button class="btn btn-primary" onclick="step1Next()">Continue — Target Your Job →</button>
+      <div class="guarantee"><span class="guarantee-icon">🔒</span><span>Your resume is <strong>never stored or sold.</strong> Processed in real-time and discarded immediately. We take privacy seriously.</span></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="panel" id="p2">
+    <div class="card">
+      <span class="section-label">Step 2 of 4</span>
+      <h3>Target the Job</h3>
+      <p class="sub">The more specific you are, the better we can beat their exact ATS filters and get your resume to a human.</p>
+      <div class="field">
+        <label for="jobTitle">Job Title You're Targeting *</label>
+        <input type="text" id="jobTitle" placeholder="e.g. Senior Marketing Manager, Software Engineer, Project Manager">
+      </div>
+      <div class="field">
+        <label for="jobDesc">Job Description <span style="font-weight:400;color:var(--muted)">(paste it — highly recommended)</span></label>
+        <textarea id="jobDesc" rows="10" placeholder="Paste the full job description here. We'll extract every keyword and requirement to match your resume exactly.&#10;&#10;No job description? Just describe the type of role you want." oninput="updateCount(this,'jc')"></textarea>
+        <div class="char-count" id="jc">0 characters</div>
+      </div>
+      <div class="field">
+        <label for="expLevel">Your Experience Level *</label>
+        <select id="expLevel">
+          <option value="entry">0–2 years (Entry Level)</option>
+          <option value="mid" selected>3–6 years (Mid Level)</option>
+          <option value="senior">7–12 years (Senior)</option>
+          <option value="exec">12+ years (Executive / Director)</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button class="btn btn-outline" onclick="goTo(1)" style="flex:1">← Back</button>
+        <button class="btn btn-primary" onclick="step2Next()" style="flex:3">Continue — Choose Package →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 UPSELL -->
+  <div class="panel" id="p3">
+    <div class="card">
+      <span class="section-label">Step 3 of 4</span>
+      <h3>Your Resume Rewrite — $29</h3>
+      <p class="sub">Boost your chances even further. Add a cover letter or LinkedIn rewrite at a discount — most applicants skip these and lose the edge.</p>
+    </div>
+    <div class="upsell-grid">
+      <div class="upsell-card" id="uc-cover" onclick="toggleUpsell('cover')">
+        <div class="upsell-icon">✉️</div>
+        <h4>Cover Letter</h4>
+        <p>A tailored cover letter for this exact job. Most applicants don't include one — that's your edge.</p>
+        <div><span class="upsell-price">+$15</span><span class="upsell-original">$35</span></div>
+      </div>
+      <div class="upsell-card" id="uc-linkedin" onclick="toggleUpsell('linkedin')">
+        <div class="upsell-icon">💼</div>
+        <h4>LinkedIn Rewrite</h4>
+        <p>Your headline and summary rewritten to attract recruiters and pass LinkedIn's search algorithm.</p>
+        <div><span class="upsell-price">+$19</span><span class="upsell-original">$39</span></div>
+      </div>
+    </div>
+    <div class="order-summary">
+      <h4>Order Summary</h4>
+      <div class="order-line"><span>AI Resume Rewrite</span><span class="price">$29.00</span></div>
+      <div class="order-line" id="ol-cover" style="display:none"><span>Cover Letter</span><span class="price">$15.00</span></div>
+      <div class="order-line" id="ol-linkedin" style="display:none"><span>LinkedIn Rewrite</span><span class="price">$19.00</span></div>
+      <div class="order-line total"><span>Total Today</span><span class="price" id="totalPrice">$29.00</span></div>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button class="btn btn-outline" onclick="goTo(2)" style="flex:1">← Back</button>
+      <button class="btn btn-primary" id="payBtn" onclick="handlePayment()" style="flex:3">🔒 Proceed to Checkout →</button>
+    </div>
+    <div class="guarantee" style="margin-top:16px"><span class="guarantee-icon">💳</span><span><strong>Secure checkout via Stripe.</strong> Your card details are never handled by us — processed directly by Stripe's PCI-compliant system.</span></div>
+    <!-- DEV MODE: bypass payment for demo -->
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="bypassPayment()" style="background:transparent;border:none;color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;cursor:pointer;text-decoration:underline">DEMO: Skip payment & generate</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="panel" id="pLoad">
+    <div class="card">
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <h3>Rewriting Your Resume...</h3>
+        <p>AI engine working · est. 20–40 seconds</p>
+        <div class="loading-steps">
+          <div class="ls" id="ls1"><div class="ls-dot"></div>Parsing your experience &amp; skills</div>
+          <div class="ls" id="ls2"><div class="ls-dot"></div>Extracting job keywords &amp; ATS requirements</div>
+          <div class="ls" id="ls3"><div class="ls-dot"></div>Rewriting with ATS optimization</div>
+          <div class="ls" id="ls4"><div class="ls-dot"></div>Strengthening impact statements</div>
+          <div class="ls" id="ls5"><div class="ls-dot"></div>Finalizing &amp; formatting</div>
+        </div>
+        <div class="timeout-msg" id="timeoutMsg">
+          This is taking longer than usual. <button onclick="retryGeneration()" style="background:var(--gold);color:white;border:none;border-radius:4px;padding:6px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;margin-left:8px">Retry</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 RESULTS -->
+  <div class="panel" id="p4">
+    <div class="result-header">
+      <h2>Your Resume is Ready ✦</h2>
+      <p>ATS-optimized, keyword-matched, and tailored to your target role</p>
+      <div class="result-badges">
+        <span class="badge-pill">ATS OPTIMIZED</span>
+        <span class="badge-pill">KEYWORD MATCHED</span>
+        <span class="badge-pill" id="b-cover" style="display:none">COVER LETTER</span>
+        <span class="badge-pill" id="b-linkedin" style="display:none">LINKEDIN</span>
+      </div>
+    </div>
+    <div class="result-tabs">
+      <button class="tab active" onclick="switchTab(this,'resume')">📄 Resume</button>
+      <button class="tab" onclick="switchTab(this,'improvements')">✨ What Changed</button>
+      <button class="tab" id="t-cover" style="display:none" onclick="switchTab(this,'cover')">✉️ Cover Letter</button>
+      <button class="tab" id="t-linkedin" style="display:none" onclick="switchTab(this,'linkedin')">💼 LinkedIn</button>
+    </div>
+    <div class="tab-content active" id="tc-resume">
+      <div class="resume-output" id="resumeOut"></div>
+      <div class="action-row">
+        <button class="btn btn-success" onclick="RZ.copyText(document.getElementById('resumeOut').textContent,'Resume copied!')">📋 Copy Resume</button>
+        <button class="btn btn-outline" onclick="resetTool()">↺ Rewrite Another</button>
+      </div>
+    </div>
+    <div class="tab-content" id="tc-improvements">
+      <div class="card"><ul class="improvements-list" id="impList"></ul></div>
+    </div>
+    <div class="tab-content" id="tc-cover">
+      <div class="extra-result">
+        <h4>✉️ Your Cover Letter</h4>
+        <div class="resume-output" id="coverOut"></div>
+        <div class="action-row" style="margin-top:16px">
+          <button class="btn btn-success" onclick="RZ.copyText(document.getElementById('coverOut').textContent,'Cover letter copied!')">📋 Copy Cover Letter</button>
+        </div>
+      </div>
+    </div>
+    <div class="tab-content" id="tc-linkedin">
+      <div class="extra-result">
+        <h4>💼 Your LinkedIn Rewrite</h4>
+        <div class="resume-output" id="linkedinOut"></div>
+        <div class="action-row" style="margin-top:16px">
+          <button class="btn btn-success" onclick="RZ.copyText(document.getElementById('linkedinOut').textContent,'LinkedIn content copied!')">📋 Copy LinkedIn</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHARE ROW -->
+    <div class="share-row" style="margin-top:8px">
+      <span style="font-size:20px">🎉</span>
+      <div class="share-text">
+        <strong>Know someone job hunting?</strong>
+        Share Resumaiz — they get a better resume, you feel good about it.
+      </div>
+      <button class="btn btn-outline" style="padding:8px 16px;font-size:12px" onclick="shareApp()">Share →</button>
+    </div>
+
+    <!-- PRO UPSELL BANNER -->
+    <div class="pro-banner" id="proBanner">
+      <div class="pro-banner-icon">🚀</div>
+      <div class="pro-banner-body">
+        <div class="pro-banner-eyebrow">// you're just getting started</div>
+        <h3>Ready to land the job faster?<br>Upgrade to Resumaiz Pro.</h3>
+        <p>Generate a tailored kit for every job, predict your interview questions, get a salary negotiation script, and track every application — all in one dashboard.</p>
+        <div class="pro-features">
+          <span class="pro-feat">✦ Job Kit Generator</span>
+          <span class="pro-feat">◎ Application Tracker</span>
+          <span class="pro-feat">🎯 Interview Coach</span>
+          <span class="pro-feat">💰 Salary Negotiator</span>
+          <span class="pro-feat">📊 ATS Match Score</span>
+          <span class="pro-feat">💼 LinkedIn Rewrite</span>
+        </div>
+      </div>
+      <div class="pro-banner-cta">
+        <button class="btn-pro" onclick="RZ.goToCheckout('pro')">Open Resumaiz Pro →</button>
+        <div class="pro-price">$49/mo · Cancel anytime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL CAPTURE MODAL -->
+<div class="modal-bg" id="emailModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeEmailModal()">✕</button>
+    <h2>Your Score is Ready ✦</h2>
+    <p class="sub">Enter your email to see your full resume score + personalized improvement tips. Free — no credit card.</p>
+    <input type="email" class="modal-input" id="emailCapture" placeholder="your@email.com">
+    <button class="btn btn-primary" onclick="submitEmail()" style="width:100%">See My Free Score →</button>
+    <p class="modal-disclaimer">No spam. Unsubscribe anytime. We'll send you one weekly job search tip — that's it.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Resumaiz</div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Service</a>
+    <a href="resumaiz-pro.html">Pro Dashboard</a>
+    <a href="mailto:hello@resumaiz.com">Support</a>
+  </div>
+</footer>
+
+<script src="rz-utils.js"></script>
+<script>
+let upsells = { cover: false, linkedin: false };
+let lastPrompt = null;
+
+// Animate live counter
+(function() {
+  const base = 2847;
+  const el = document.getElementById('liveCount');
+  let count = parseInt(localStorage.getItem('rz_view_count') || base);
+  if (count < base) count = base;
+  count += Math.floor(Math.random() * 3);
+  localStorage.setItem('rz_view_count', count);
+  el.textContent = count.toLocaleString();
+})();
+
+function goTo(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active','done'));
+  const id = n === 'load' ? 'pLoad' : 'p' + n;
+  document.getElementById(id).classList.add('active');
+  if (typeof n === 'number') {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('si' + i);
+      if (!el) continue;
+      if (i < n) el.classList.add('done');
+      else if (i === n) el.classList.add('active');
+    }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  hideError();
+}
+
+function showError(msg) {
+  const e = document.getElementById('errorCard');
+  e.textContent = '⚠ ' + msg;
+  e.style.display = 'block';
+  e.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function hideError() {
+  document.getElementById('errorCard').style.display = 'none';
+}
+
+function updateCount(el, id) {
+  const c = el.value.length;
+  const hint = id === 'rc' ? (c < 300 ? ` — add more detail for best results (${300-c} chars more)` : ' ✓ Good length') : '';
+  document.getElementById(id).textContent = c.toLocaleString() + ' characters' + hint;
+}
+
+function step1Next() {
+  const r = document.getElementById('resumeInput').value.trim();
+  if (r.length < 50) { showError('Please paste your resume (at least 50 characters) to continue.'); return; }
+  goTo(2);
+}
+
+function step2Next() {
+  const j = document.getElementById('jobTitle').value.trim();
+  if (!j) { showError('Please enter the job title you are targeting.'); return; }
+  goTo(3);
+}
+
+function toggleUpsell(type) {
+  upsells[type] = !upsells[type];
+  document.getElementById('uc-' + type).classList.toggle('selected', upsells[type]);
+  document.getElementById('ol-' + type).style.display = upsells[type] ? 'flex' : 'none';
+  let total = 29;
+  if (upsells.cover) total += 15;
+  if (upsells.linkedin) total += 19;
+  document.getElementById('totalPrice').textContent = '$' + total + '.00';
+}
+
+function handlePayment() {
+  // In production: RZ.goToCheckout('rewrite')
+  // which redirects to Stripe. On return, ?payment=success&type=rewrite is set
+  // For now, show demo note
+  RZ.showToast('⚠ Add your Stripe link in rz-utils.js to enable real payments', 'error');
+}
+
+function bypassPayment() {
+  // Demo/dev bypass — remove this button in production
+  RZ.setRewritePaid();
+  startProcessing();
+}
+
+async function startProcessing() {
+  if (!RZ.isRewritePurchased()) { RZ.goToCheckout('rewrite'); return; }
+  goTo('load');
+  const steps = ['ls1','ls2','ls3','ls4','ls5'];
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      if (i > 0) { document.getElementById(steps[i-1]).classList.remove('active'); document.getElementById(steps[i-1]).classList.add('done'); }
+      document.getElementById(id).classList.add('active');
+    }, i * 900);
+  });
+
+  // Show timeout message after 35s
+  const timeoutUI = setTimeout(() => {
+    document.getElementById('timeoutMsg').style.display = 'block';
+  }, 35000);
+
+  const resume = document.getElementById('resumeInput').value.trim();
+  const jobTitle = document.getElementById('jobTitle').value.trim();
+  const jobDesc = document.getElementById('jobDesc').value.trim();
+  const exp = document.getElementById('expLevel').value;
+  const expMap = { entry:'0-2 years entry level', mid:'3-6 years mid level', senior:'7-12 years senior', exec:'12+ years executive' };
+
+  let extraFields = '';
+  if (upsells.cover) extraFields += '\n"coverLetter":"<full tailored cover letter with \\n paragraph breaks>",';
+  if (upsells.linkedin) extraFields += '\n"linkedinRewrite":"<headline\\n\\nAbout section\\n\\nSummary section>",';
+
+  const prompt = `You are an elite resume writer with 15+ years of experience helping candidates land jobs at top companies. You specialize in ATS optimization, powerful impact statements, and tailoring resumes to specific roles.
+
+CANDIDATE RESUME:
+${resume}
+
+TARGET: ${jobTitle}
+EXPERIENCE: ${expMap[exp]}
+JOB DESCRIPTION: ${jobDesc || 'General role matching the title. Optimize for common requirements.'}
+
+REWRITING RULES:
+- Transform every weak passive bullet into a strong quantified impact statement
+- Weave in keywords from the job description naturally throughout
+- Use powerful action verbs: Led, Spearheaded, Delivered, Generated, Architected, Launched, Scaled, Drove, etc.
+- Add realistic implied metrics where logical (managed team → led 6-person team)
+- Keep ALL real experience — enhance, never fabricate
+- ATS-safe: no tables, columns, graphics references, special characters
+- Match tone and seniority to ${expMap[exp]}
+- Structure: Name/Contact Info, Professional Summary (3-4 powerful lines), Experience, Skills, Education
+
+Return ONLY valid JSON (no markdown, no backticks, no extra text):
+{
+"rewrittenResume":"<complete rewritten resume — use \\n for line breaks, \\n\\n between sections>",${extraFields}
+"improvements":[
+{"icon":"✦","title":"<specific improvement title>","detail":"<what exactly changed and why it helps with ATS and hiring managers>"},
+{"icon":"✦","title":"<title>","detail":"<detail>"},
+{"icon":"✦","title":"<title>","detail":"<detail>"},
+{"icon":"✦","title":"<title>","detail":"<detail>"},
+{"icon":"✦","title":"<title>","detail":"<detail>"}
+]
+}`;
+
+  lastPrompt = prompt;
+
+  try {
+    const parsed = await RZ.callAI(prompt, 45000);
+    clearTimeout(timeoutUI);
+    steps.forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).classList.add('done'); });
+    setTimeout(() => renderResults(parsed), 500);
+  } catch(err) {
+    clearTimeout(timeoutUI);
+    if (err.message === 'TIMEOUT') {
+      RZ.showToast('Generation timed out — please retry', 'error');
+      document.getElementById('timeoutMsg').style.display = 'block';
+    } else {
+      goTo(3);
+      showError('Something went wrong. Please try again — AI sometimes needs a moment.');
+    }
+  }
+}
+
+function retryGeneration() {
+  document.getElementById('timeoutMsg').style.display = 'none';
+  ['ls1','ls2','ls3','ls4','ls5'].forEach(id => document.getElementById(id).classList.remove('active','done'));
+  startProcessing();
+}
+
+function renderResults(data) {
+  document.getElementById('resumeOut').textContent = data.rewrittenResume || '';
+  const list = document.getElementById('impList');
+  list.innerHTML = (data.improvements || []).map(imp => `
+    <li class="imp-item">
+      <div class="imp-icon">${imp.icon || '✦'}</div>
+      <div class="imp-text"><strong>${imp.title}</strong><span>${imp.detail}</span></div>
+    </li>`).join('');
+  if (upsells.cover && data.coverLetter) {
+    document.getElementById('coverOut').textContent = data.coverLetter;
+    document.getElementById('t-cover').style.display = 'block';
+    document.getElementById('b-cover').style.display = 'inline-block';
+  }
+  if (upsells.linkedin && data.linkedinRewrite) {
+    document.getElementById('linkedinOut').textContent = data.linkedinRewrite;
+    document.getElementById('t-linkedin').style.display = 'block';
+    document.getElementById('b-linkedin').style.display = 'inline-block';
+  }
+  goTo(4);
+  setTimeout(() => { document.getElementById('proBanner').style.display = 'flex'; }, 1200);
+}
+
+function switchTab(btn, name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tc-' + name).classList.add('active');
+}
+
+function shareApp() {
+  const text = 'Just used Resumaiz to rewrite my resume with AI — got callbacks within days. Free to try: ';
+  const url = window.location.origin;
+  if (navigator.share) {
+    navigator.share({ title: 'Resumaiz — AI Resume Rewriter', text, url });
+  } else {
+    RZ.copyText(text + url, 'Share link copied!');
+  }
+}
+
+function resetTool() {
+  ['resumeInput','jobTitle','jobDesc'].forEach(id => document.getElementById(id).value = '');
+  upsells = { cover: false, linkedin: false };
+  ['cover','linkedin'].forEach(t => {
+    document.getElementById('uc-' + t).classList.remove('selected');
+    document.getElementById('ol-' + t).style.display = 'none';
+    document.getElementById('t-' + t).style.display = 'none';
+    document.getElementById('b-' + t).style.display = 'none';
+  });
+  document.getElementById('totalPrice').textContent = '$29.00';
+  document.getElementById('proBanner').style.display = 'none';
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===0));
+  document.querySelectorAll('.tab-content').forEach((t,i) => t.classList.toggle('active', i===0));
+  ['ls1','ls2','ls3','ls4','ls5'].forEach(id => document.getElementById(id).classList.remove('active','done'));
+  document.getElementById('rc').textContent = '0 characters — aim for 300+ for best results';
+  document.getElementById('jc').textContent = '0 characters';
+  document.getElementById('timeoutMsg').style.display = 'none';
+  goTo(1);
+}
+
+// Email modal (triggered from scorer page via URL param)
+if (new URLSearchParams(window.location.search).get('score') === 'show') {
+  setTimeout(() => document.getElementById('emailModal').classList.add('open'), 800);
+}
+
+function closeEmailModal() {
+  document.getElementById('emailModal').classList.remove('open');
+}
+
+function submitEmail() {
+  const email = document.getElementById('emailCapture').value.trim();
+  if (!email || !email.includes('@')) { RZ.showToast('Please enter a valid email', 'error'); return; }
+  RZ.saveEmail(email);
+  closeEmailModal();
+  RZ.showToast('✓ Email saved — your score is ready!', 'success');
+}
+</script>
+</body>
+</html>
