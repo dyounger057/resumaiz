@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Resumaiz Pro — AI job application platform. Job kits, interview coaching, salary negotiation, and application tracking.">
+<title>Resumaiz Pro — AI Job Application Platform</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0f;--s1:#141416;--s2:#1c1c1f;--s3:#222226;--border:#2a2a2f;--border2:#363638;--gold:#d4a843;--gold-dim:rgba(212,168,67,0.12);--gold-border:rgba(212,168,67,0.25);--text:#f0ede8;--t2:#a09888;--t3:#6a6058;--green:#34c77b;--green-dim:rgba(52,199,123,0.1);--blue:#4a9eff;--blue-dim:rgba(74,158,255,0.1);--red:#ff5c5c;--red-dim:rgba(255,92,92,0.1);--amber:#f5a623;--amber-dim:rgba(245,166,35,0.1);--purple:#a78bfa;--purple-dim:rgba(167,139,250,0.1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:224px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform 0.3s}
+.sb-logo{padding:24px 20px 18px;border-bottom:1px solid var(--border)}
+.sb-wordmark{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);line-height:1}
+.sb-wordmark span{color:var(--text);font-style:italic}
+.sb-plan{margin-top:8px;display:inline-block;background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;padding:3px 8px;border-radius:2px}
+.nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.15s;border:1px solid transparent;user-select:none}
+.ni:hover{background:var(--s2);color:var(--text)}
+.ni.active{background:var(--gold-dim);border-color:var(--gold-border);color:var(--gold)}
+.ni-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.ni-badge{margin-left:auto;background:var(--gold);color:#000;font-size:9px;font-weight:700;padding:2px 6px;border-radius:100px;font-family:'JetBrains Mono',monospace}
+.nd{height:1px;background:var(--border);margin:6px 0}
+.sb-bottom{padding:14px 10px;border-top:1px solid var(--border)}
+.upgrade-box{background:linear-gradient(135deg,rgba(212,168,67,0.12),rgba(212,168,67,0.04));border:1px solid var(--gold-border);border-radius:8px;padding:14px;text-align:center}
+.upgrade-box strong{display:block;font-size:13px;color:var(--text);margin-bottom:4px}
+.upgrade-box p{font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.4}
+.btn-ug{width:100%;background:var(--gold);color:#000;border:none;border-radius:4px;padding:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:0.3px;transition:all 0.15s}
+.btn-ug:hover{background:#e8c060;transform:translateY(-1px)}
+/* MOBILE NAV */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--s1);border-top:1px solid var(--border);z-index:100;padding:8px 0 env(safe-area-inset-bottom)}
+.mn-items{display:flex;justify-content:space-around}
+.mn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;cursor:pointer;color:var(--t3);transition:color 0.2s;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px}
+.mn-item.active{color:var(--gold)}
+.mn-icon{font-size:18px}
+/* SHELL */
+.shell{margin-left:224px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--s1);border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--text)}
+.tb-title span{color:var(--gold)}
+.tb-right{display:flex;align-items:center;gap:10px}
+.kit-pill{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t2);background:var(--s2);border:1px solid var(--border);padding:5px 12px;border-radius:100px;letter-spacing:1px}
+.kit-pill strong{color:var(--gold)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer}
+.content{flex:1;padding:28px}
+/* PAGES */
+.page{display:none;animation:fu 0.32s ease both}
+.page.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* PAGE HEADER */
+.ph{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ph h1{font-family:'Playfair Display',serif;font-size:24px;color:var(--text);margin-bottom:3px}
+.ph p{font-size:13px;color:var(--t2);line-height:1.5;max-width:600px}
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:18px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc.gold::before{background:var(--gold)}.sc.green::before{background:var(--green)}
+.sc.blue::before{background:var(--blue)}.sc.purple::before{background:var(--purple)}
+.sl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.sv{font-family:'Playfair Display',serif;font-size:30px;color:var(--text);margin-bottom:2px}
+.ss{font-size:12px;color:var(--t2)}
+/* SECTION TITLES */
+.st{font-family:'Playfair Display',serif;font-size:15px;color:var(--text);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.st span{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);font-weight:400;letter-spacing:1px;cursor:pointer}
+.st span:hover{color:var(--gold)}
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:14px}
+.card-sm{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:16px}
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+/* APP LIST */
+.al{display:flex;flex-direction:column;gap:8px}
+.ar{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:14px 18px;display:flex;align-items:center;gap:14px;transition:border-color 0.2s;cursor:pointer}
+.ar:hover{border-color:var(--border2)}
+.ar-logo{width:38px;height:38px;border-radius:7px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ar-info{flex:1;min-width:0}
+.ar-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ar-co{font-size:12px;color:var(--t2);margin-top:2px}
+.ar-meta{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ar-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:1px}
+.sp{font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px}
+.sp-saved{background:var(--s2);color:var(--t2)}
+.sp-applied{background:var(--blue-dim);color:var(--blue)}
+.sp-interview{background:var(--green-dim);color:var(--green)}
+.sp-rejected{background:var(--red-dim);color:var(--red)}
+.sp-offer{background:var(--gold-dim);color:var(--gold)}
+/* KANBAN */
+.kb{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;overflow-x:auto}
+.kc{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:12px;min-width:160px}
+.kch{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.kn{background:var(--s2);color:var(--t2);width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px}
+.kcard{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:11px;margin-bottom:7px;cursor:pointer;transition:all 0.15s}
+.kcard:hover{border-color:var(--gold);box-shadow:0 2px 8px rgba(212,168,67,0.1)}
+.kcard-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3}
+.kcard-co{font-size:11px;color:var(--t2)}
+.kcard-meta{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.kcard-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3)}
+.kadd{width:100%;background:transparent;border:1px dashed var(--border);border-radius:6px;padding:9px;color:var(--t3);font-size:12px;cursor:pointer;transition:all 0.2s;font-family:'Outfit',sans-serif}
+.kadd:hover{border-color:var(--gold);color:var(--gold)}
+/* FORM */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px;letter-spacing:0.3px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=text],input[type=email],textarea,select{width:100%;background:var(--s2);border:1.5px solid var(--border);border-radius:6px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;padding:11px 13px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;line-height:1.5}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-dim)}
+textarea{resize:vertical}
+select option{background:var(--s2)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;padding:10px 20px;transition:all 0.15s;white-space:nowrap}
+.btn-gold{background:var(--gold);color:#000}
+.btn-gold:hover{background:#e8c060;transform:translateY(-1px);box-shadow:0 4px 14px rgba(212,168,67,0.3)}
+.btn-gold:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--t2)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-green{background:var(--green);color:#000}
+.btn-green:hover{background:#28b36b;transform:translateY(-1px)}
+.btn-full{width:100%}
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tb{font-size:13px;font-weight:500;padding:10px 18px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--t2);transition:all 0.2s;white-space:nowrap;background:transparent;border-top:none;border-left:none;border-right:none;font-family:'Outfit',sans-serif}
+.tb:hover{color:var(--text)}
+.tb.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tp{display:none;animation:fu 0.28s ease}
+.tp.active{display:block}
+/* MATCH SCORE */
+.mr{display:flex;align-items:center;gap:24px;padding:20px;background:var(--s2);border-radius:8px;margin-bottom:18px}
+.mring{position:relative;width:90px;height:90px;flex-shrink:0}
+.mring svg{transform:rotate(-90deg)}
+.mring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.mscore{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px}
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.chip{font-size:11px;padding:4px 11px;border-radius:100px;font-weight:500}
+.chip-g{background:var(--green-dim);color:var(--green);border:1px solid rgba(52,199,123,0.2)}
+.chip-r{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,92,92,0.2)}
+.chip-a{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.2)}
+/* OUTPUT */
+.out{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:20px;font-size:13px;line-height:1.8;color:var(--t2);white-space:pre-wrap;font-family:'Outfit',sans-serif;min-height:180px;max-height:480px;overflow-y:auto}
+.out::-webkit-scrollbar{width:3px}
+.out::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+/* LOADING */
+.spin{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.75s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gw{text-align:center;padding:48px 20px}
+.gw h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:6px}
+.gw p{font-size:12px;color:var(--t2);font-family:'JetBrains Mono',monospace;letter-spacing:1px}
+/* PROFILE */
+.pg{display:grid;grid-template-columns:190px 1fr;gap:20px;align-items:start}
+.pav-wrap{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center}
+.pav{width:72px;height:72px;border-radius:50%;background:var(--gold-dim);border:2px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 10px}
+.pn{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:3px}
+.pr{font-size:11px;color:var(--t2);margin-bottom:14px}
+.pstat{text-align:center;padding:10px 0;border-top:1px solid var(--border)}
+.psn{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold)}
+.psl{font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;letter-spacing:1px}
+/* EMPTY STATE */
+.es{text-align:center;padding:40px 20px;color:var(--t3)}
+.es-icon{font-size:36px;margin-bottom:10px}
+.es p{font-size:13px;line-height:1.6;max-width:280px;margin:0 auto 14px;color:var(--t2)}
+/* ONBOARDING */
+.ob{background:linear-gradient(135deg,rgba(212,168,67,0.08),rgba(212,168,67,0.02));border:1px solid var(--gold-border);border-radius:8px;padding:20px;margin-bottom:20px}
+.ob-title{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:12px;color:var(--text)}
+.ob-steps{display:flex;flex-direction:column;gap:8px}
+.ob-step{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--t2)}
+.ob-step.done{color:var(--t3);text-decoration:line-through}
+.ob-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all 0.2s}
+.ob-step.done .ob-check{background:var(--green);border-color:var(--green);color:#000}
+.ob-step.active .ob-check{border-color:var(--gold);color:var(--gold)}
+/* MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.mbg.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;animation:fu 0.3s ease;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.modal h2{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:5px}
+.modal .sub{font-size:13px;color:var(--t2);margin-bottom:20px;line-height:1.5}
+.mc{position:absolute;top:14px;right:14px;background:transparent;border:none;color:var(--t2);font-size:17px;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all 0.2s}
+.mc:hover{background:var(--s2);color:var(--text)}
+/* INTERVIEW Q */
+.iq{margin-bottom:18px;padding:16px;background:var(--s2);border-radius:8px;border-left:3px solid var(--gold)}
+.iq-num{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold);letter-spacing:1px;margin-bottom:7px}
+.iq-q{font-size:13px;font-weight:600;color:var(--text);margin-bottom:9px}
+.iq-a{font-size:12px;color:var(--t2);line-height:1.7}
+/* SCORE CATS */
+.scat{margin-bottom:14px}
+.scat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.scat-name{font-size:13px;font-weight:600;color:var(--text)}
+.scat-score{font-size:13px;font-weight:700}
+.scat-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.scat-fill{height:100%;border-radius:2px;transition:width 1s ease 0.2s}
+.scat-fb{font-size:12px;color:var(--t2);line-height:1.5}
+/* NARRATIVE BOX */
+.narrative{background:linear-gradient(135deg,rgba(212,168,67,0.08),rgba(212,168,67,0.02));border:1px solid var(--gold-border);border-radius:8px;padding:16px;margin-bottom:18px}
+.nar-label{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold);letter-spacing:2px;margin-bottom:7px}
+.nar-text{font-size:14px;color:var(--text);line-height:1.6;font-style:italic}
+/* LEGAL FOOTER */
+footer{background:var(--s1);border-top:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.fl{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold)}
+.fl span{color:var(--text);font-style:italic}
+.flinks{display:flex;gap:16px}
+.flinks a{font-size:11px;color:var(--t3);text-decoration:none;font-family:'JetBrains Mono',monospace;letter-spacing:1px;transition:color 0.2s}
+.flinks a:hover{color:var(--gold)}
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .shell{margin-left:0}
+  .mobile-nav{display:block}
+  .content{padding:20px 16px 80px}
+  .sg{grid-template-columns:1fr 1fr}
+  .kb{grid-template-columns:repeat(3,1fr)}
+  .pg{grid-template-columns:1fr}
+  .fr{grid-template-columns:1fr}
+  .g2{grid-template-columns:1fr}
+  footer{padding:14px 16px}
+}
+@media(max-width:540px){
+  .sg{grid-template-columns:1fr 1fr}
+  .kb{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-wordmark">Resumaiz</div>
+    <div class="sb-plan" id="planBadge">FREE PLAN</div>
+  </div>
+  <nav class="nav">
+    <div class="ni active" onclick="sp('dashboard',this)"><span class="ni-icon">⬛</span>Dashboard</div>
+    <div class="ni" onclick="sp('kit',this)"><span class="ni-icon">✦</span>Job Kit Generator</div>
+    <div class="ni" onclick="sp('tracker',this)"><span class="ni-icon">◎</span>Application Tracker</div>
+    <div class="ni" onclick="sp('rewriter',this)"><span class="ni-icon">↺</span>Resume Rewriter</div>
+    <div class="nd"></div>
+    <div class="ni" onclick="sp('interview',this)"><span class="ni-icon">🎯</span>Interview Coach<span class="ni-badge">NEW</span></div>
+    <div class="ni" onclick="sp('salary',this)"><span class="ni-icon">💰</span>Salary Negotiator<span class="ni-badge">NEW</span></div>
+    <div class="ni" onclick="sp('scorer',this)"><span class="ni-icon">📊</span>Resume Scorer<span class="ni-badge">FREE</span></div>
+    <div class="nd"></div>
+    <div class="ni" onclick="sp('profile',this)"><span class="ni-icon">◉</span>My Profile</div>
+  </nav>
+  <div class="sb-bottom">
+    <div class="upgrade-box" id="upgradeBox">
+      <strong>Unlock Everything</strong>
+      <p>Unlimited kits, priority AI &amp; all premium tools</p>
+      <button class="btn-ug" onclick="RZ.goToCheckout('pro')">Upgrade — $49/mo</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <div class="mn-items">
+    <div class="mn-item active" onclick="sp('dashboard',this)"><span class="mn-icon">⬛</span>Home</div>
+    <div class="mn-item" onclick="sp('kit',this)"><span class="mn-icon">✦</span>Kit</div>
+    <div class="mn-item" onclick="sp('tracker',this)"><span class="mn-icon">◎</span>Track</div>
+    <div class="mn-item" onclick="sp('interview',this)"><span class="mn-icon">🎯</span>Interview</div>
+    <div class="mn-item" onclick="sp('profile',this)"><span class="mn-icon">◉</span>Profile</div>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div class="shell">
+  <div class="topbar">
+    <div class="tb-title">Good morning, <span id="uName">there</span> 👋</div>
+    <div class="tb-right">
+      <div class="kit-pill">Kits: <strong id="kitsDisplay">0</strong> / <span id="kitLimit">2 free</span></div>
+      <div class="avatar">👤</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="ph"><div><h1>Your Job Search Hub</h1><p>Everything you need to go from application to offer — in one place.</p></div></div>
+
+      <!-- ONBOARDING CHECKLIST -->
+      <div class="ob" id="onboardingBox">
+        <div class="ob-title">✦ Get started — 3 quick steps</div>
+        <div class="ob-steps">
+          <div class="ob-step" id="ob1"><div class="ob-check">1</div><span>Save your profile &amp; master resume <button onclick="sp('profile',null)" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600">→ Go to Profile</button></span></div>
+          <div class="ob-step" id="ob2"><div class="ob-check">2</div><span>Generate your first Job Kit <button onclick="sp('kit',null)" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600">→ Generate Now</button></span></div>
+          <div class="ob-step" id="ob3"><div class="ob-check">3</div><span>Add your first application to the tracker <button onclick="sp('tracker',null)" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600">→ Open Tracker</button></span></div>
+        </div>
+      </div>
+
+      <div class="sg">
+        <div class="sc gold"><div class="sl">Total Applied</div><div class="sv" id="st-total">0</div><div class="ss">applications sent</div></div>
+        <div class="sc green"><div class="sl">Interviews</div><div class="sv" id="st-int">0</div><div class="ss">scheduled or completed</div></div>
+        <div class="sc blue"><div class="sl">Response Rate</div><div class="sv" id="st-rate">—</div><div class="ss">vs 2% avg</div></div>
+        <div class="sc purple"><div class="sl">Kits Generated</div><div class="sv" id="st-kits">0</div><div class="ss">resume + cover kits</div></div>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="st">Recent Applications <span onclick="sp('tracker',null)">VIEW ALL →</span></div>
+          <div class="al" id="recentList"></div>
+        </div>
+        <div>
+          <div class="st">Quick Actions</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="card-sm" style="cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'" onclick="sp('kit',null)">
+              <div style="font-size:18px;margin-bottom:6px">✦</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:3px">Generate Job Kit</div>
+              <div style="font-size:12px;color:var(--t2)">Tailored resume + cover letter + match score + follow-up email</div>
+            </div>
+            <div class="card-sm" style="cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'" onclick="sp('interview',null)">
+              <div style="font-size:18px;margin-bottom:6px">🎯</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:3px">Prep for Interview</div>
+              <div style="font-size:12px;color:var(--t2)">Predicted questions, model answers, elevator pitch</div>
+            </div>
+            <div class="card-sm" style="cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'" onclick="sp('salary',null)">
+              <div style="font-size:18px;margin-bottom:6px">💰</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:3px">Negotiate Your Offer</div>
+              <div style="font-size:12px;color:var(--t2)">Word-for-word script + counter-offer strategy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ JOB KIT ═══ -->
+    <div class="page" id="page-kit">
+      <div class="ph"><div><h1>Job Kit Generator</h1><p>Paste a job description. Get a tailored resume, ATS match score, cover letter, and follow-up email — instantly.</p></div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="tabs">
+            <button class="tb active" onclick="stab(this,'kit-in')">📋 Job Input</button>
+            <button class="tb" onclick="stab(this,'kit-pro')">👤 Profile</button>
+          </div>
+          <div class="tp active" id="tp-kit-in">
+            <div class="field"><label>Job Title *</label><input type="text" id="kTitle" placeholder="e.g. Senior Product Manager"></div>
+            <div class="field"><label>Company Name</label><input type="text" id="kCo" placeholder="e.g. Google, Stripe, local startup"></div>
+            <div class="field"><label>Job Description *</label><textarea id="kDesc" rows="9" placeholder="Paste the full job description here. The more detail the better..."></textarea></div>
+            <div class="fr">
+              <div class="field" style="margin-bottom:0"><label>Experience Level</label><select id="kExp"><option value="entry">Entry (0-2 yrs)</option><option value="mid" selected>Mid (3-6 yrs)</option><option value="senior">Senior (7-12 yrs)</option><option value="exec">Executive (12+)</option></select></div>
+              <div class="field" style="margin-bottom:0"><label>Generate</label><select id="kOutputs"><option value="full">Full Kit (All 3)</option><option value="resume">Resume Only</option><option value="cover">Cover Letter Only</option></select></div>
+            </div>
+          </div>
+          <div class="tp" id="tp-kit-pro">
+            <div id="kitProStatus"></div>
+          </div>
+          <div style="margin-top:16px">
+            <button class="btn btn-gold btn-full" id="kBtn" onclick="generateKit()">✦ Generate My Job Kit</button>
+            <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace" id="kitLimitNote"></div>
+          </div>
+        </div>
+        <div id="kOut">
+          <div class="card" style="display:flex;align-items:center;justify-content:center;min-height:400px">
+            <div class="es"><div class="es-icon">✦</div><p>Fill in the job details on the left and click Generate. Your complete application kit appears here.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TRACKER ═══ -->
+    <div class="page" id="page-tracker">
+      <div class="ph">
+        <div><h1>Application Tracker</h1><p>Track every application from saved to offer. Click a card to edit or move it.</p></div>
+        <button class="btn btn-gold" onclick="openAddModal()">+ Add Application</button>
+      </div>
+      <div class="kb" id="kanban">
+        <div class="kc"><div class="kch">Saved <div class="kn" id="kn-saved">0</div></div><div id="kc-saved"></div><button class="kadd" onclick="openAddModal('Saved')">+ Add</button></div>
+        <div class="kc"><div class="kch">Applied <div class="kn" id="kn-applied">0</div></div><div id="kc-applied"></div><button class="kadd" onclick="openAddModal('Applied')">+ Add</button></div>
+        <div class="kc"><div class="kch">Interview <div class="kn" id="kn-interview">0</div></div><div id="kc-interview"></div><button class="kadd" onclick="openAddModal('Interview')">+ Add</button></div>
+        <div class="kc"><div class="kch">Offer <div class="kn" id="kn-offer">0</div></div><div id="kc-offer"></div><button class="kadd" onclick="openAddModal('Offer')">+ Add</button></div>
+        <div class="kc"><div class="kch">Rejected <div class="kn" id="kn-rejected">0</div></div><div id="kc-rejected"></div><button class="kadd" onclick="openAddModal('Rejected')">+ Add</button></div>
+      </div>
+    </div>
+
+    <!-- ═══ REWRITER ═══ -->
+    <div class="page" id="page-rewriter">
+      <div class="ph"><div><h1>Resume Rewriter</h1><p>Full ATS-optimized rewrite of your master resume. Paste it in, target a role, get a polished result.</p></div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="field"><label>Your Current Resume</label><textarea id="rwRes" rows="12" placeholder="Paste your full resume here..."></textarea></div>
+          <div class="field"><label>Target Job Title *</label><input type="text" id="rwTitle" placeholder="e.g. Marketing Manager"></div>
+          <div class="field"><label>Job Description (recommended)</label><textarea id="rwDesc" rows="5" placeholder="Paste job description to maximize ATS keyword matching..."></textarea></div>
+          <button class="btn btn-gold btn-full" id="rwBtn" onclick="rewriteResume()">↺ Rewrite My Resume</button>
+        </div>
+        <div id="rwOut">
+          <div class="card" style="display:flex;align-items:center;justify-content:center;min-height:400px">
+            <div class="es"><div class="es-icon">↺</div><p>Your rewritten resume will appear here.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ INTERVIEW COACH ═══ -->
+    <div class="page" id="page-interview">
+      <div class="ph"><div><h1>Interview Coach</h1><p>Get predicted questions, model answers built from your resume, a 60-second elevator pitch, and smart questions to ask the interviewer.</p></div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="field"><label>Job Title You Applied For *</label><input type="text" id="ivTitle" placeholder="e.g. Senior Product Manager"></div>
+          <div class="field"><label>Company Name</label><input type="text" id="ivCo" placeholder="e.g. Google, local startup"></div>
+          <div class="field"><label>Job Description *</label><textarea id="ivDesc" rows="8" placeholder="Paste the full job description for the most accurate predicted questions..."></textarea></div>
+          <div class="field"><label>Your Resume <span style="font-weight:400;color:var(--t3)">(auto-filled from profile)</span></label><textarea id="ivRes" rows="5" placeholder="Auto-loaded from your profile if saved..."></textarea></div>
+          <button class="btn btn-gold btn-full" id="ivBtn" onclick="generateInterview()">🎯 Build My Interview Playbook</button>
+        </div>
+        <div id="ivOut">
+          <div class="card" style="display:flex;align-items:center;justify-content:center;min-height:500px">
+            <div class="es"><div class="es-icon">🎯</div><p>Your personalized interview playbook will appear here — predicted questions, model answers, elevator pitch, and smart questions to ask.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SALARY NEGOTIATOR ═══ -->
+    <div class="page" id="page-salary">
+      <div class="ph"><div><h1>Salary Negotiator</h1><p>Got an offer? Get a word-for-word negotiation script, a data-backed counter-offer, and proven tactics.</p></div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="fr">
+            <div class="field"><label>Job Title *</label><input type="text" id="salTitle" placeholder="Senior Marketing Manager"></div>
+            <div class="field"><label>Company</label><input type="text" id="salCo" placeholder="Salesforce"></div>
+          </div>
+          <div class="field"><label>Their Offer *</label><input type="text" id="salOffer" placeholder="e.g. $85,000 base + 10% bonus"></div>
+          <div class="field"><label>Your Target</label><input type="text" id="salTarget" placeholder="e.g. $100,000 base + equity"></div>
+          <div class="fr">
+            <div class="field"><label>Years of Experience</label><input type="text" id="salExp" placeholder="e.g. 6 years in marketing"></div>
+            <div class="field"><label>Location / Remote</label><input type="text" id="salLoc" placeholder="e.g. Chicago IL, remote"></div>
+          </div>
+          <div class="field"><label>Competing Offers or Leverage <span style="font-weight:400;color:var(--t3)">(optional)</span></label><textarea id="salLev" rows="3" placeholder="e.g. I have another offer at $95k, or I'm currently employed and not urgently looking..."></textarea></div>
+          <button class="btn btn-gold btn-full" id="salBtn" onclick="generateSalary()">💰 Build My Negotiation Script</button>
+        </div>
+        <div id="salOut">
+          <div class="card" style="display:flex;align-items:center;justify-content:center;min-height:500px">
+            <div class="es"><div class="es-icon">💰</div><p>Your salary negotiation script — counter-offer number, word-for-word email, and call tactics — will appear here.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RESUME SCORER ═══ -->
+    <div class="page" id="page-scorer">
+      <div class="ph"><div><h1>Free Resume Scorer</h1><p>Instant ATS score, full breakdown, and improvement roadmap. Free — no payment required.</p></div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="field"><label>Paste Your Resume *</label><textarea id="scRes" rows="12" placeholder="Paste your full resume here for a free instant score..."></textarea></div>
+          <div class="field"><label>Target Job Title <span style="font-weight:400;color:var(--t3)">(optional — improves accuracy)</span></label><input type="text" id="scTitle" placeholder="e.g. Project Manager"></div>
+          <button class="btn btn-gold btn-full" id="scBtn" onclick="generateScore()">📊 Score My Resume Free</button>
+          <div style="margin-top:14px;padding:14px;background:var(--s2);border-radius:6px;border:1px solid var(--border)">
+            <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold);letter-spacing:2px;margin-bottom:6px">// SHARE THIS PAGE</div>
+            <div style="font-size:12px;color:var(--t2);line-height:1.6">Share this free scorer on Reddit, LinkedIn, and TikTok. Every free user who sees a weak score becomes a warm $29 lead for the rewriter.</div>
+            <button class="btn btn-ghost" style="margin-top:10px;padding:7px 14px;font-size:11px" onclick="shareScorer()">Share Free Scorer →</button>
+          </div>
+        </div>
+        <div id="scOut">
+          <div class="card" style="display:flex;align-items:center;justify-content:center;min-height:400px">
+            <div class="es"><div class="es-icon">📊</div><p>Your resume score, full breakdown, and improvement roadmap will appear here instantly.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PROFILE ═══ -->
+    <div class="page" id="page-profile">
+      <div class="ph"><div><h1>My Profile</h1><p>Set up once. Every tool auto-fills from your profile — no re-pasting your resume ever again.</p></div></div>
+      <div class="pg">
+        <div>
+          <div class="pav-wrap">
+            <div class="pav">👤</div>
+            <div class="pn" id="pDN">Your Name</div>
+            <div class="pr" id="pDR">Your Role</div>
+            <div class="pstat"><div class="psn" id="pDK">0</div><div class="psl">Kits Made</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tabs">
+            <button class="tb active" onclick="ptab(this,'basics')">Basics</button>
+            <button class="tb" onclick="ptab(this,'resume')">Master Resume</button>
+            <button class="tb" onclick="ptab(this,'prefs')">Preferences</button>
+          </div>
+          <div class="tp active" id="tp-basics">
+            <div class="fr"><div class="field"><label>Full Name</label><input type="text" id="pName" placeholder="Devon Smith" oninput="updatePDP()"></div><div class="field"><label>Email</label><input type="email" id="pEmail" placeholder="devon@email.com"></div></div>
+            <div class="fr"><div class="field"><label>Target Job Title</label><input type="text" id="pTitle" placeholder="Senior Marketing Manager" oninput="updatePDP()"></div><div class="field"><label>Experience Level</label><select id="pExp"><option value="entry">Entry (0-2 yrs)</option><option value="mid" selected>Mid (3-6 yrs)</option><option value="senior">Senior (7-12 yrs)</option><option value="exec">Executive (12+)</option></select></div></div>
+            <div class="field"><label>Location</label><input type="text" id="pLoc" placeholder="Chicago, IL (or Remote)"></div>
+            <div class="field"><label>LinkedIn URL</label><input type="text" id="pLI" placeholder="linkedin.com/in/yourname"></div>
+          </div>
+          <div class="tp" id="tp-resume">
+            <div class="field"><label>Master Resume — paste your full resume here</label><textarea id="pResume" rows="14" placeholder="Paste your complete master resume. Every tool pulls from this automatically.&#10;&#10;Include: work experience, education, skills, certifications, achievements..."></textarea></div>
+          </div>
+          <div class="tp" id="tp-prefs">
+            <div class="field"><label>Industries of Interest</label><input type="text" id="pInd" placeholder="e.g. Tech, SaaS, Healthcare, Finance"></div>
+            <div class="field"><label>Job Type</label><select id="pJT"><option>Full-time</option><option>Remote Only</option><option>Contract / Freelance</option><option>Part-time</option><option>Any</option></select></div>
+            <div class="field"><label>Salary Target</label><input type="text" id="pSal" placeholder="e.g. $80,000 — $120,000"></div>
+            <div class="field"><label>Key Skills (comma separated)</label><textarea id="pSkills" rows="3" placeholder="Project Management, Salesforce, Python, Content Strategy, SEO..."></textarea></div>
+          </div>
+          <div style="margin-top:4px;display:flex;gap:10px;align-items:center">
+            <button class="btn btn-gold" onclick="saveProfile()">Save Profile</button>
+            <span id="profileSaved" style="font-size:12px;color:var(--green);display:none">✓ Saved</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <footer>
+    <div class="fl">Resumaiz<span> Pro</span></div>
+    <div class="flinks">
+      <a href="index.html">← Basic Rewriter</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="mailto:hello@resumaiz.com">Support</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ADD/EDIT APPLICATION MODAL -->
+<div class="mbg" id="addModal">
+  <div class="modal">
+    <button class="mc" onclick="closeModal('addModal')">✕</button>
+    <h2 id="modalTitle">Add Application</h2>
+    <p class="sub">Track a job application on your board.</p>
+    <input type="hidden" id="editId">
+    <div class="fr"><div class="field"><label>Job Title *</label><input type="text" id="mTitle" placeholder="Product Manager"></div><div class="field"><label>Company *</label><input type="text" id="mCo" placeholder="Stripe"></div></div>
+    <div class="fr">
+      <div class="field"><label>Status</label><select id="mStatus"><option>Saved</option><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option></select></div>
+      <div class="field"><label>Date</label><input type="text" id="mDate" placeholder="Apr 9, 2026"></div>
+    </div>
+    <div class="field"><label>Notes</label><textarea id="mNotes" rows="3" placeholder="Referral from John, remote, $120k base..."></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn btn-ghost" onclick="closeModal('addModal')" style="flex:1">Cancel</button>
+      <button class="btn btn-gold" id="modalSaveBtn" onclick="saveApplication()" style="flex:2">Save Application</button>
+    </div>
+  </div>
+</div>
+
+<script src="rz-utils.js"></script>
+<script>
+// ── STATE ──
+let apps = RZ.getApps();
+let profile = RZ.getProfile();
+const kitsCount = () => RZ.getKitsCount();
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  loadProfileFields();
+  renderAll();
+  updateKitUI();
+  checkOnboarding();
+  // Auto-fill interview resume
+  const ivEl = document.getElementById('ivRes');
+  if (ivEl && profile.resume) ivEl.value = profile.resume;
+  // Plan badge
+  if (RZ.isPro()) {
+    document.getElementById('planBadge').textContent = 'PRO';
+    document.getElementById('planBadge').style.background = 'rgba(52,199,123,0.15)';
+    document.getElementById('planBadge').style.color = 'var(--green)';
+    document.getElementById('planBadge').style.borderColor = 'rgba(52,199,123,0.3)';
+    document.getElementById('upgradeBox').style.display = 'none';
+    document.getElementById('kitLimit').textContent = 'unlimited';
+  }
+});
+
+// ── NAVIGATION ──
+function sp(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ni,.mn-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  // Also activate sidebar item if mobile nav was clicked
+  document.querySelectorAll('.ni').forEach(n => {
+    if (n.textContent.toLowerCase().includes(id.toLowerCase().substring(0,4))) n.classList.add('active');
+  });
+  renderAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── PROFILE ──
+function loadProfileFields() {
+  profile = RZ.getProfile();
+  const map = {pName:'name',pEmail:'email',pTitle:'title',pLoc:'location',pLI:'linkedin',pResume:'resume',pInd:'industries',pSal:'salary',pSkills:'skills'};
+  Object.entries(map).forEach(([elId, key]) => {
+    const el = document.getElementById(elId);
+    if (el && profile[key]) el.value = profile[key];
+  });
+  if (profile.exp) document.getElementById('pExp').value = profile.exp;
+  if (profile.jobType) document.getElementById('pJT').value = profile.jobType;
+  updatePDP();
+}
+
+function saveProfile() {
+  profile = {
+    name: v('pName'), email: v('pEmail'), title: v('pTitle'),
+    exp: v('pExp'), location: v('pLoc'), linkedin: v('pLI'),
+    resume: v('pResume'), industries: v('pInd'), jobType: v('pJT'),
+    salary: v('pSal'), skills: v('pSkills')
+  };
+  RZ.saveProfile(profile);
+  document.getElementById('profileSaved').style.display = 'inline';
+  setTimeout(() => document.getElementById('profileSaved').style.display = 'none', 2500);
+  RZ.showToast('✓ Profile saved', 'success');
+  updatePDP();
+  checkOnboarding();
+  // Auto-fill interview
+  const ivEl = document.getElementById('ivRes');
+  if (ivEl && profile.resume) ivEl.value = profile.resume;
+  // Update kit profile tab
+  renderKitProTab();
+}
+
+function updatePDP() {
+  const name = v('pName') || 'Your Name';
+  const title = v('pTitle') || 'Your Role';
+  document.getElementById('pDN').textContent = name;
+  document.getElementById('pDR').textContent = title;
+  document.getElementById('uName').textContent = name.split(' ')[0] || 'there';
+  document.getElementById('pDK').textContent = kitsCount();
+}
+
+function ptab(btn, id) {
+  document.querySelectorAll('#page-profile .tb').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#page-profile .tp').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tp-' + id).classList.add('active');
+}
+
+// ── ONBOARDING ──
+function checkOnboarding() {
+  const hasProfile = !!(profile.name && profile.resume);
+  const hasKit = kitsCount() > 0;
+  const hasApp = apps.length > 0;
+  const allDone = hasProfile && hasKit && hasApp;
+  if (allDone) { document.getElementById('onboardingBox').style.display = 'none'; return; }
+  setObStep('ob1', hasProfile);
+  setObStep('ob2', hasKit);
+  setObStep('ob3', hasApp);
+}
+
+function setObStep(id, done) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('done', done);
+  el.classList.toggle('active', !done);
+  el.querySelector('.ob-check').textContent = done ? '✓' : id.replace('ob','');
+}
+
+// ── STATS ──
+function renderAll() {
+  apps = RZ.getApps();
+  renderStats();
+  renderRecentApps();
+  renderKanban();
+  updateKitUI();
+  renderKitProTab();
+  document.getElementById('st-kits').textContent = kitsCount();
+  document.getElementById('pDK').textContent = kitsCount();
+}
+
+function renderStats() {
+  const total = apps.filter(a => a.status !== 'Saved').length;
+  const ints = apps.filter(a => ['Interview','Offer'].includes(a.status)).length;
+  const rate = total > 0 ? Math.round((ints/total)*100) + '%' : '—';
+  document.getElementById('st-total').textContent = total;
+  document.getElementById('st-int').textContent = ints;
+  document.getElementById('st-rate').textContent = rate;
+}
+
+function renderRecentApps() {
+  const el = document.getElementById('recentList');
+  const recent = [...apps].reverse().slice(0, 5);
+  if (!recent.length) {
+    el.innerHTML = `<div class="es"><div class="es-icon">📋</div><p>No applications yet. Generate your first Job Kit to get started.</p><button class="btn btn-gold" style="margin:0 auto" onclick="sp('kit',null)">Generate Kit →</button></div>`;
+    return;
+  }
+  const statusClass = {Applied:'sp-applied',Interview:'sp-interview',Rejected:'sp-rejected',Offer:'sp-offer',Saved:'sp-saved'};
+  el.innerHTML = recent.map(a => `
+    <div class="ar" onclick="openEditModal('${a.id}')">
+      <div class="ar-logo">🏢</div>
+      <div class="ar-info"><div class="ar-title">${esc(a.title)}</div><div class="ar-co">${esc(a.company)}</div></div>
+      <div class="ar-meta"><div class="ar-date">${a.date||''}</div><div class="sp ${statusClass[a.status]||'sp-applied'}">${a.status}</div></div>
+    </div>`).join('');
+}
+
+// ── KANBAN ──
+function renderKanban() {
+  const cols = ['Saved','Applied','Interview','Offer','Rejected'];
+  const statusClass = {Applied:'sp-applied',Interview:'sp-interview',Rejected:'sp-rejected',Offer:'sp-offer',Saved:'sp-saved'};
+  cols.forEach(col => {
+    const colApps = apps.filter(a => a.status === col);
+    document.getElementById('kn-' + col.toLowerCase()).textContent = colApps.length;
+    document.getElementById('kc-' + col.toLowerCase()).innerHTML = colApps.map(a => `
+      <div class="kcard" onclick="openEditModal('${a.id}')">
+        <div class="kcard-title">${esc(a.title)}</div>
+        <div class="kcard-co">${esc(a.company)}</div>
+        <div class="kcard-meta">
+          <div class="kcard-date">${a.date||''}</div>
+          <div class="sp ${statusClass[a.status]||'sp-applied'}" style="font-size:10px;padding:2px 7px">${a.status}</div>
+        </div>
+      </div>`).join('');
+  });
+}
+
+// ── ADD/EDIT APPLICATION ──
+function openAddModal(status) {
+  document.getElementById('editId').value = '';
+  document.getElementById('modalTitle').textContent = 'Add Application';
+  document.getElementById('modalSaveBtn').textContent = 'Add Application';
+  document.getElementById('mTitle').value = '';
+  document.getElementById('mCo').value = '';
+  document.getElementById('mNotes').value = '';
+  document.getElementById('mDate').value = RZ.formatDate();
+  if (status) document.getElementById('mStatus').value = status;
+  document.getElementById('addModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const app = apps.find(a => a.id === id);
+  if (!app) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('modalTitle').textContent = 'Edit Application';
+  document.getElementById('modalSaveBtn').textContent = 'Save Changes';
+  document.getElementById('mTitle').value = app.title;
+  document.getElementById('mCo').value = app.company;
+  document.getElementById('mStatus').value = app.status;
+  document.getElementById('mDate').value = app.date || '';
+  document.getElementById('mNotes').value = app.notes || '';
+  document.getElementById('addModal').classList.add('open');
+}
+
+function saveApplication() {
+  const title = document.getElementById('mTitle').value.trim();
+  const co = document.getElementById('mCo').value.trim();
+  if (!title || !co) { RZ.showToast('Please enter job title and company', 'error'); return; }
+  const editId = document.getElementById('editId').value;
+  const appData = { title, company: co, status: document.getElementById('mStatus').value, date: document.getElementById('mDate').value, notes: document.getElementById('mNotes').value };
+  if (editId) {
+    apps = apps.map(a => a.id === editId ? { ...a, ...appData } : a);
+    RZ.showToast('✓ Application updated', 'success');
+  } else {
+    apps.push({ id: Date.now().toString(), ...appData });
+    RZ.showToast('✓ Application added', 'success');
+  }
+  RZ.saveApps(apps);
+  closeModal('addModal');
+  renderAll();
+  checkOnboarding();
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── KIT GENERATOR ──
+function updateKitUI() {
+  const count = kitsCount();
+  const canGen = RZ.canGenerateKit();
+  document.getElementById('kitsDisplay').textContent = count;
+  const note = document.getElementById('kitLimitNote');
+  if (!canGen) {
+    note.textContent = 'Free limit reached — upgrade to Pro for unlimited kits';
+    note.style.color = 'var(--amber)';
+  } else if (!RZ.isPro()) {
+    note.textContent = `${RZ.FREE_KIT_LIMIT - count} free kit${RZ.FREE_KIT_LIMIT - count !== 1 ? 's' : ''} remaining`;
+    note.style.color = 'var(--t3)';
+  } else {
+    note.textContent = 'Unlimited kits — Pro plan active';
+    note.style.color = 'var(--green)';
+  }
+}
+
+function renderKitProTab() {
+  profile = RZ.getProfile();
+  const el = document.getElementById('kitProStatus');
+  if (!el) return;
+  if (profile.resume) {
+    el.innerHTML = `<div style="padding:12px;background:var(--green-dim);border:1px solid rgba(52,199,123,0.2);border-radius:6px;margin-bottom:14px"><div style="font-size:12px;color:var(--green);font-weight:600;margin-bottom:3px">✓ Profile loaded</div><div style="font-size:12px;color:var(--t2)">${esc(profile.name||'Your name')} · ${esc(profile.title||'Your title')}</div></div><div style="font-size:13px;color:var(--t2);line-height:1.6">Resume saved (${profile.resume.length.toLocaleString()} chars). The AI will use your full profile when generating kits — no need to paste your resume every time.</div>`;
+  } else {
+    el.innerHTML = `<div class="es" style="padding:20px 0"><div class="es-icon">👤</div><p>Save your profile and master resume first so the AI can pull your experience automatically.</p><button class="btn btn-ghost" onclick="sp('profile',null)">Set Up Profile →</button></div>`;
+  }
+}
+
+async function generateKit() {
+  if (!RZ.canGenerateKit()) {
+    RZ.showToast('Free limit reached — upgrade to Pro', 'error');
+    RZ.goToCheckout('pro');
+    return;
+  }
+  const title = v('kTitle');
+  const co = v('kCo');
+  const desc = v('kDesc');
+  const exp = v('kExp');
+  const outputs = v('kOutputs');
+  if (!title || !desc) { RZ.showToast('Please enter job title and description', 'error'); return; }
+  const resume = profile.resume || '(No master resume on file — write the best possible resume for this role based on the job description alone)';
+  const expMap = {entry:'0-2 years entry level',mid:'3-6 years mid level',senior:'7-12 years senior',exec:'12+ years executive'};
+  setLoading('kBtn','kOut','Building Your Kit','AI tailoring everything to this role...');
+  let extra = '';
+  if (outputs !== 'cover') extra += '"resume":"<tailored resume with \\n line breaks>",';
+  if (outputs !== 'resume') extra += '"coverLetter":"<full tailored cover letter with \\n for paragraphs>",';
+  if (outputs === 'full' || outputs === 'resume') extra += '"followUpEmail":"<subject line\\n\\nemail body>",';
+  const prompt = `You are an elite career coach. Build a complete job application kit.
+CANDIDATE RESUME: ${resume}
+TARGET: ${title} at ${co||'the company'}
+EXPERIENCE: ${expMap[exp]}
+JOB DESCRIPTION: ${desc}
+Return ONLY valid JSON:
+{"matchScore":<0-100>,"matchVerdict":"<2-3 word verdict>","keywordsFound":["<kw>","<kw>","<kw>"],"keywordsMissing":["<kw>","<kw>","<kw>"],${extra}"topTip":"<one specific actionable tip for this exact role>"}`;
+  try {
+    const data = await RZ.callAI(prompt, 45000);
+    RZ.incrementKits();
+    // Auto-add to tracker
+    apps.push({id:Date.now().toString(),title,company:co||'Unknown',status:'Applied',date:RZ.formatDate(),notes:'Generated via Job Kit'});
+    RZ.saveApps(apps);
+    renderAll();
+    checkOnboarding();
+    renderKitOutput(data, outputs);
+    RZ.showToast('✦ Job kit generated!', 'gold');
+  } catch(e) {
+    setError('kOut', e.message === 'TIMEOUT' ? 'Request timed out — please try again.' : 'Generation failed. Please try again.');
+  } finally {
+    resetBtn('kBtn', '✦ Generate My Job Kit');
+  }
+}
+
+function renderKitOutput(d, outputs) {
+  const sc = Math.min(100, Math.max(0, d.matchScore||0));
+  const col = sc>=70?'var(--green)':sc>=45?'var(--amber)':'var(--red)';
+  const circ = 283;
+  const off = circ - (sc/100)*circ;
+  let tabs = `<button class="tb active" onclick="dstab(this,'km')">📊 Match Score</button>`;
+  if (d.resume) tabs += `<button class="tb" onclick="dstab(this,'kr')">📄 Resume</button>`;
+  if (d.coverLetter) tabs += `<button class="tb" onclick="dstab(this,'kc')">✉️ Cover Letter</button>`;
+  if (d.followUpEmail) tabs += `<button class="tb" onclick="dstab(this,'kf')">📬 Follow-Up</button>`;
+  document.getElementById('kOut').innerHTML = `<div class="card">
+    <div class="tabs">${tabs}</div>
+    <div class="tp active" id="tp-km">
+      <div class="mr">
+        <div class="mring"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="40" stroke="var(--border)" stroke-width="7"/><circle cx="45" cy="45" r="40" stroke="${col}" stroke-width="7" stroke-dasharray="${circ}" stroke-dashoffset="${off}" stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/></svg><div class="mscore" style="color:${col}">${sc}</div></div>
+        <div><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--t3);letter-spacing:2px;margin-bottom:4px">ATS MATCH SCORE</div><div style="font-size:18px;font-family:'Playfair Display',serif;color:var(--text);margin-bottom:6px">${d.matchVerdict||''}</div><div style="font-size:13px;color:var(--t2);line-height:1.5">${d.topTip||''}</div></div>
+      </div>
+      <div style="margin-bottom:14px"><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green);letter-spacing:2px;margin-bottom:8px">KEYWORDS MATCHED</div><div class="chips">${(d.keywordsFound||[]).map(k=>`<span class="chip chip-g">✓ ${esc(k)}</span>`).join('')}</div></div>
+      <div><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--red);letter-spacing:2px;margin-bottom:8px">KEYWORDS MISSING</div><div class="chips">${(d.keywordsMissing||[]).map(k=>`<span class="chip chip-r">✗ ${esc(k)}</span>`).join('')}</div></div>
+    </div>
+    ${d.resume?`<div class="tp" id="tp-kr"><div class="out" id="kit-res">${esc(d.resume)}</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-green" style="flex:1" onclick="RZ.copyText(document.getElementById('kit-res').textContent,'Resume copied!')">📋 Copy Resume</button></div></div>`:''}
+    ${d.coverLetter?`<div class="tp" id="tp-kc"><div class="out" id="kit-cov">${esc(d.coverLetter)}</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-green" style="flex:1" onclick="RZ.copyText(document.getElementById('kit-cov').textContent,'Cover letter copied!')">📋 Copy Cover Letter</button></div></div>`:''}
+    ${d.followUpEmail?`<div class="tp" id="tp-kf"><div class="out" id="kit-fol">${esc(d.followUpEmail)}</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-green" style="flex:1" onclick="RZ.copyText(document.getElementById('kit-fol').textContent,'Email copied!')">📋 Copy Email</button></div></div>`:''}
+  </div>`;
+}
+
+function dstab(btn, id) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.tb').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.tp').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const el = document.getElementById('tp-' + id);
+  if (el) el.classList.add('active');
+}
+
+// ── RESUME REWRITER ──
+async function rewriteResume() {
+  const res = v('rwRes'), title = v('rwTitle'), desc = v('rwDesc');
+  if (!res || !title) { RZ.showToast('Please paste your resume and job title', 'error'); return; }
+  setLoading('rwBtn','rwOut','Rewriting Resume','Optimizing for ATS...');
+  const prompt = `Elite resume writer. Rewrite this resume for ATS and the target role.
+RESUME: ${res}
+TARGET: ${title}
+JOB DESC: ${desc||'General role matching the title'}
+Return ONLY valid JSON:
+{"rewrite":"<full rewritten resume with \\n line breaks>","improvements":["<specific change made>","<change>","<change>","<change>"]}`;
+  try {
+    const data = await RZ.callAI(prompt, 40000);
+    document.getElementById('rwOut').innerHTML = `<div class="card">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold);letter-spacing:2px;margin-bottom:14px">REWRITTEN RESUME</div>
+      <div class="out" id="rw-out">${esc(data.rewrite||'')}</div>
+      <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-green" style="flex:1" onclick="RZ.copyText(document.getElementById('rw-out').textContent,'Resume copied!')">📋 Copy Resume</button></div>
+      <div style="margin-top:18px"><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--t3);letter-spacing:2px;margin-bottom:10px">WHAT CHANGED</div>${(data.improvements||[]).map(i=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t2)"><span style="color:var(--gold);flex-shrink:0">✦</span>${esc(i)}</div>`).join('')}</div>
+    </div>`;
+    RZ.showToast('✓ Resume rewritten', 'success');
+  } catch(e) {
+    setError('rwOut', e.message === 'TIMEOUT' ? 'Request timed out. Please try again.' : 'Rewrite failed. Please try again.');
+  } finally { resetBtn('rwBtn', '↺ Rewrite My Resume'); }
+}
+
+// ── INTERVIEW COACH ──
+async function generateInterview() {
+  const title = v('ivTitle'), desc = v('ivDesc');
+  let resume = v('ivRes');
+  if (!resume && profile.resume) resume = profile.resume;
+  if (!title || !desc) { RZ.showToast('Please enter job title and description', 'error'); return; }
+  setLoading('ivBtn','ivOut','Building Playbook','Analyzing the role and predicting questions...');
+  const prompt = `World-class interview coach. Build a personalized interview playbook.
+JOB: ${title} at ${v('ivCo')||'the company'}
+JOB DESC: ${desc}
+RESUME: ${resume||'Not provided — infer from job description'}
+Return ONLY valid JSON:
+{"keyTheme":"<one sentence central narrative for the interview>","topQuestions":[{"question":"<q>","answer":"<strong 3-5 sentence model answer tailored to resume and role>"},{"question":"<q>","answer":"<a>"},{"question":"<q>","answer":"<a>"},{"question":"<q>","answer":"<a>"},{"question":"<q>","answer":"<a>"},{"question":"<q>","answer":"<a>"},{"question":"<q>","answer":"<a>"}],"elevatorPitch":"<60-second elevator pitch tailored to this company and role>","questionsToAsk":["<smart q to ask interviewer>","<q>","<q>","<q>","<q>"],"weakSpots":["<gap and how to address it>","<gap>","<gap>"]}`;
+  try {
+    const data = await RZ.callAI(prompt, 45000);
+    renderInterviewOutput(data);
+    RZ.showToast('🎯 Interview playbook ready!', 'gold');
+  } catch(e) {
+    setError('ivOut', e.message === 'TIMEOUT' ? 'Request timed out. Please try again.' : 'Generation failed. Please try again.');
+  } finally { resetBtn('ivBtn','🎯 Build My Interview Playbook'); }
+}
+
+function renderInterviewOutput(d) {
+  const qHTML = (d.topQuestions||[]).map((q,i)=>`<div class="iq"><div class="iq-num">Q${i+1}</div><div class="iq-q">${esc(q.question)}</div><div class="iq-a">${esc(q.answer)}</div></div>`).join('');
+  const wsHTML = (d.weakSpots||[]).map(w=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t2)"><span style="color:var(--amber);flex-shrink:0">⚠</span>${esc(w)}</div>`).join('');
+  const qaHTML = (d.questionsToAsk||[]).map(q=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t2)"><span style="color:var(--green);flex-shrink:0">✦</span>${esc(q)}</div>`).join('');
+  document.getElementById('ivOut').innerHTML = `<div class="card">
+    <div class="narrative"><div class="nar-label">YOUR NARRATIVE</div><div class="nar-text">"${esc(d.keyTheme||'')}"</div></div>
+    <div class="tabs">
+      <button class="tb active" onclick="dstab(this,'iv-q')">Q&amp;A</button>
+      <button class="tb" onclick="dstab(this,'iv-p')">Elevator Pitch</button>
+      <button class="tb" onclick="dstab(this,'iv-a')">Ask Them</button>
+      <button class="tb" onclick="dstab(this,'iv-w')">Weak Spots</button>
+    </div>
+    <div class="tp active" id="tp-iv-q">${qHTML}</div>
+    <div class="tp" id="tp-iv-p"><div class="out" id="iv-pitch">${esc(d.elevatorPitch||'')}</div><button class="btn btn-green" style="margin-top:12px" onclick="RZ.copyText(document.getElementById('iv-pitch').textContent,'Pitch copied!')">Copy Pitch</button></div>
+    <div class="tp" id="tp-iv-a">${qaHTML}</div>
+    <div class="tp" id="tp-iv-w">${wsHTML}</div>
+  </div>`;
+}
+
+// ── SALARY NEGOTIATOR ──
+async function generateSalary() {
+  const title = v('salTitle'), offer = v('salOffer');
+  if (!title || !offer) { RZ.showToast('Please enter job title and their offer', 'error'); return; }
+  setLoading('salBtn','salOut','Building Script','Analyzing the offer and market data...');
+  const prompt = `Elite salary negotiation coach. Build a complete negotiation strategy.
+JOB: ${title} at ${v('salCo')||'the company'}
+THEIR OFFER: ${offer}
+TARGET: ${v('salTarget')||'maximize the offer'}
+EXPERIENCE: ${v('salExp')||'not specified'}
+LOCATION: ${v('salLoc')||'not specified'}
+LEVERAGE: ${v('salLev')||'none'}
+Return ONLY valid JSON:
+{"counterOffer":"<specific counter-offer recommendation with reasoning>","strategy":"<2-3 sentence overall strategy>","negotiationEmail":"<complete word-for-word professional email — include subject line — firm but warm, never apologetic>","phoneScript":"<word-for-word phone script with stage directions — about 150 words>","tactics":["<specific tactic>","<tactic>","<tactic>","<tactic>"],"thingsToNeverSay":["<phrase and why to avoid it>","<phrase>","<phrase>"],"estimatedOutcome":"<realistic prediction of achievable result>"}`;
+  try {
+    const data = await RZ.callAI(prompt, 45000);
+    renderSalaryOutput(data);
+    RZ.showToast('💰 Negotiation script ready!', 'gold');
+  } catch(e) {
+    setError('salOut', e.message === 'TIMEOUT' ? 'Request timed out. Please try again.' : 'Generation failed. Please try again.');
+  } finally { resetBtn('salBtn','💰 Build My Negotiation Script'); }
+}
+
+function renderSalaryOutput(d) {
+  const tacHTML = (d.tactics||[]).map(t=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t2)"><span style="color:var(--green);flex-shrink:0">✦</span>${esc(t)}</div>`).join('');
+  const avHTML = (d.thingsToNeverSay||[]).map(t=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t2)"><span style="color:var(--red);flex-shrink:0">✗</span>${esc(t)}</div>`).join('');
+  document.getElementById('salOut').innerHTML = `<div class="card">
+    <div style="background:var(--green-dim);border:1px solid rgba(52,199,123,0.2);border-radius:8px;padding:18px;margin-bottom:18px">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green);letter-spacing:2px;margin-bottom:7px">COUNTER-OFFER STRATEGY</div>
+      <div style="font-size:16px;font-family:'Playfair Display',serif;color:var(--text);margin-bottom:7px">${esc(d.counterOffer||'')}</div>
+      <div style="font-size:13px;color:var(--t2);line-height:1.6">${esc(d.strategy||'')}</div>
+    </div>
+    <div class="tabs">
+      <button class="tb active" onclick="dstab(this,'sal-e')">Email Script</button>
+      <button class="tb" onclick="dstab(this,'sal-p')">Phone Script</button>
+      <button class="tb" onclick="dstab(this,'sal-t')">Tactics</button>
+      <button class="tb" onclick="dstab(this,'sal-a')">Never Say</button>
+    </div>
+    <div class="tp active" id="tp-sal-e"><div class="out" id="sal-email">${esc(d.negotiationEmail||'')}</div><button class="btn btn-green" style="margin-top:12px" onclick="RZ.copyText(document.getElementById('sal-email').textContent,'Email copied!')">Copy Email</button></div>
+    <div class="tp" id="tp-sal-p"><div class="out" id="sal-phone">${esc(d.phoneScript||'')}</div><button class="btn btn-green" style="margin-top:12px" onclick="RZ.copyText(document.getElementById('sal-phone').textContent,'Script copied!')">Copy Script</button></div>
+    <div class="tp" id="tp-sal-t">${tacHTML}</div>
+    <div class="tp" id="tp-sal-a">${avHTML}<div style="margin-top:14px;padding:12px;background:var(--green-dim);border-radius:6px;border:1px solid rgba(52,199,123,0.2)"><div style="font-size:11px;font-weight:600;color:var(--green);margin-bottom:4px">Estimated Outcome</div><div style="font-size:12px;color:var(--t2)">${esc(d.estimatedOutcome||'')}</div></div></div>
+  </div>`;
+}
+
+// ── RESUME SCORER ──
+async function generateScore() {
+  const res = v('scRes');
+  if (!res || res.length < 50) { RZ.showToast('Please paste your resume to score it', 'error'); return; }
+  setLoading('scBtn','scOut','Scoring Resume','Running ATS analysis...');
+  const prompt = `ATS expert and resume analyzer. Score this resume brutally and honestly.
+RESUME: ${res}
+TARGET ROLE: ${v('scTitle')||'general professional role'}
+Return ONLY valid JSON:
+{"overallScore":<0-100>,"grade":"<A+/A/B+/B/C+/C/D/F>","verdict":"<2-3 word blunt verdict>","categories":[{"name":"ATS Compatibility","score":<0-100>,"feedback":"<specific>"},{"name":"Impact Statements","score":<0-100>,"feedback":"<specific>"},{"name":"Keywords & Skills","score":<0-100>,"feedback":"<specific>"},{"name":"Structure & Format","score":<0-100>,"feedback":"<specific>"},{"name":"Professional Summary","score":<0-100>,"feedback":"<specific>"}],"topIssues":["<most critical issue>","<issue>","<issue>"],"quickWins":["<small change for instant improvement>","<win>","<win>"],"rewritePreview":"BEFORE: [worst bullet point] | AFTER: [powerfully rewritten version]"}`;
+  try {
+    const data = await RZ.callAI(prompt, 40000);
+    renderScoreOutput(data);
+    RZ.showToast('📊 Resume scored!', 'gold');
+  } catch(e) {
+    setError('scOut', e.message === 'TIMEOUT' ? 'Request timed out. Please try again.' : 'Scoring failed. Please try again.');
+  } finally { resetBtn('scBtn','📊 Score My Resume Free'); }
+}
+
+function renderScoreOutput(d) {
+  const sc = d.overallScore||0;
+  const col = sc>=70?'var(--green)':sc>=50?'var(--amber)':'var(--red)';
+  const circ = 283;
+  const off = circ - (sc/100)*circ;
+  const catsHTML = (d.categories||[]).map(c=>{
+    const cc = c.score>=70?'var(--green)':c.score>=50?'var(--amber)':'var(--red)';
+    return `<div class="scat"><div class="scat-header"><span class="scat-name">${esc(c.name)}</span><span class="scat-score" style="color:${cc}">${c.score}/100</span></div><div class="scat-bar"><div class="scat-fill" style="width:${c.score}%;background:${cc}"></div></div><div class="scat-fb">${esc(c.feedback)}</div></div>`;
+  }).join('');
+  const issHTML = (d.topIssues||[]).map(i=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t2)"><span style="color:var(--red);flex-shrink:0">✗</span>${esc(i)}</div>`).join('');
+  const winHTML = (d.quickWins||[]).map(w=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t2)"><span style="color:var(--green);flex-shrink:0">✦</span>${esc(w)}</div>`).join('');
+  document.getElementById('scOut').innerHTML = `<div class="card">
+    <div style="display:flex;align-items:center;gap:20px;background:var(--s2);border-radius:8px;padding:18px;margin-bottom:18px">
+      <div class="mring" style="width:80px;height:80px"><svg width="80" height="80" viewBox="0 0 80 80" style="transform:rotate(-90deg)"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--border)" stroke-width="7"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${off}" style="transition:stroke-dashoffset 1.2s ease"/></svg><div class="mscore" style="font-size:20px;color:${col}">${sc}</div></div>
+      <div><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--t3);letter-spacing:2px;margin-bottom:4px">RESUME SCORE</div><div style="font-size:20px;font-family:'Playfair Display',serif;color:var(--text);margin-bottom:4px">${esc(d.grade||'')} — ${esc(d.verdict||'')}</div><div style="font-size:12px;color:var(--t2)">Industry average: 52/100</div></div>
+    </div>
+    ${catsHTML}
+    <div style="margin-bottom:14px"><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--red);letter-spacing:2px;margin-bottom:8px">TOP ISSUES</div>${issHTML}</div>
+    <div style="margin-bottom:16px"><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green);letter-spacing:2px;margin-bottom:8px">QUICK WINS</div>${winHTML}</div>
+    <div style="background:var(--s2);border-radius:8px;padding:14px;margin-bottom:18px"><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold);letter-spacing:2px;margin-bottom:7px">REWRITE PREVIEW</div><div style="font-size:12px;color:var(--t2);line-height:1.7">${esc(d.rewritePreview||'')}</div></div>
+    <div style="background:var(--gold-dim);border:1px solid var(--gold-border);border-radius:8px;padding:18px;text-align:center">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px">Ready for the full rewrite?</div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:12px">Fix every issue above and maximize your score — starting at $29.</div>
+      <a href="index.html" style="display:inline-block;background:var(--gold);color:#000;font-weight:700;font-size:13px;padding:11px 24px;border-radius:6px;text-decoration:none">Get Full Rewrite — $29 →</a>
+    </div>
+  </div>`;
+}
+
+// ── SHARED TAB SWITCHER ──
+function stab(btn, id) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.tb').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.tp').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tp-' + id).classList.add('active');
+}
+
+function ptab(btn, id) {
+  document.querySelectorAll('#page-profile .tb').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#page-profile .tp').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tp-' + id).classList.add('active');
+}
+
+// ── UTILS ──
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function setLoading(btnId, outId, title, sub) {
+  document.getElementById(btnId).disabled = true;
+  document.getElementById(btnId).textContent = 'Generating...';
+  document.getElementById(outId).innerHTML = `<div class="card" style="display:flex;align-items:center;justify-content:center;min-height:400px"><div class="gw"><div class="spin"></div><h3>${title}</h3><p>${sub}</p></div></div>`;
+}
+
+function setError(outId, msg) {
+  document.getElementById(outId).innerHTML = `<div class="card"><div class="es"><div class="es-icon">⚠</div><p style="color:var(--red)">${msg}</p></div></div>`;
+}
+
+function resetBtn(id, label) {
+  const btn = document.getElementById(id);
+  if (btn) { btn.disabled = false; btn.textContent = label; }
+}
+
+function shareScorer() {
+  const url = window.location.origin + '/resumaiz-pro.html';
+  const text = 'Free AI resume scorer — find out if your resume is getting filtered by ATS: ';
+  if (navigator.share) navigator.share({ title: 'Free Resume Scorer', text, url });
+  else RZ.copyText(text + url, 'Share link copied!');
+}
+
+// Close modals on background click
+document.querySelectorAll('.mbg').forEach(bg => {
+  bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
